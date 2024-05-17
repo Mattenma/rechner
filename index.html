@@ -1,111 +1,136 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="de">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2487.4">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schnellrechner</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 25px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+        .result, .nettoertrag {
+            font-weight: bold;
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+        .result {
+            margin-bottom: 5px;
+        }
+        .nettoertrag {
+            margin-bottom: 30px;
+        }
+        .result span, .nettoertrag span {
+            display: inline-block;
+            min-width: 100px;
+        }
+        input[readonly] {
+            background-color: #e9ecef;
+            opacity: 1;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+    </style>
+    <script>
+        function formatNumber(num) {
+            return 'CHF ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'") + ' / Jahr';
+        }
+
+        function calculate() {
+            var kaufpreis = parseFloat(document.getElementById('kaufpreis').value) || 0;
+            var miete = parseFloat(document.getElementById('miete').value) || 0;
+            var eigenmittel = parseFloat(document.getElementById('eigenmittel').value) || 0;
+            var hypothekarzins = parseFloat(document.getElementById('hypothekarzins').value) || 0;
+            var verwaltungskosten = parseFloat(document.getElementById('verwaltungskosten').value) || 0;
+
+            var fremdmittel = kaufpreis - eigenmittel;
+            document.getElementById('fremdmittel').value = fremdmittel ? fremdmittel.toFixed(2) : '';
+
+            var jahresmiete = miete * 1000 * 12;
+            var betriebsVerwaltungskosten = jahresmiete * (verwaltungskosten / 100);
+            var zinskosten = fremdmittel * 1000000 * (hypothekarzins / 100);
+            var nettoertrag = (jahresmiete * (1 - (verwaltungskosten / 100))) - zinskosten;
+            var nettoRendite = (nettoertrag / (kaufpreis * 1000000)) * 100;
+
+            var nettoRenditeElement = document.getElementById('nettoRendite');
+            nettoRenditeElement.innerText = isFinite(nettoRendite) ? nettoRendite.toFixed(2) + ' %' : '';
+
+            var zinskostenElement = document.getElementById('zinskosten');
+            zinskostenElement.innerText = isFinite(zinskosten) ? formatNumber(Math.round(zinskosten)) : '';
+
+            var mieteElement = document.getElementById('jahresmiete');
+            mieteElement.innerText = isFinite(jahresmiete) ? formatNumber(Math.round(jahresmiete)) : '';
+
+            var verwaltungskostenElement = document.getElementById('betriebskosten');
+            verwaltungskostenElement.innerText = isFinite(betriebsVerwaltungskosten) ? formatNumber(Math.round(betriebsVerwaltungskosten)) : '';
+
+            var nettoertragElement = document.getElementById('nettoertrag');
+            nettoertragElement.innerText = isFinite(nettoertrag) ? formatNumber(Math.round(nettoertrag)) : '';
+
+            if (nettoRendite < 1) {
+                nettoRenditeElement.style.color = 'red';
+            } else if (nettoRendite < 2) {
+                nettoRenditeElement.style.color = 'orange';
+            } else {
+                nettoRenditeElement.style.color = 'green';
+            }
+        }
+
+        window.onload = function() {
+            calculate();
+        }
+    </script>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="de"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Schnellrechner&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;link rel="stylesheet" href="sheet.css"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;link rel="manifest" href="manifest.json"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-family: Arial, sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.container {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>input[type="number"] {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-sizing: border-box;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 5px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 5px 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-family: Arial, sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: block;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#nettoRendite {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: bold;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.5em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if ('serviceWorker' in navigator) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>window.addEventListener('load', () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>navigator.serviceWorker.register('/service-worker.js');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function calculate() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var kaufpreis = parseFloat(document.getElementById('kaufpreis').value) || 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var miete = parseFloat(document.getElementById('miete').value) || 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var eigenmittel = parseFloat(document.getElementById('eigenmittel').value) || 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var hypothekarzins = parseFloat(document.getElementById('hypothekarzins').value) || 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var verwaltungskosten = parseFloat(document.getElementById('verwaltungskosten').value) || 0;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>var fremdmittel = kaufpreis - eigenmittel;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('fremdmittel').value = fremdmittel ? Math.round(fremdmittel) : '';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>var jahresmiete = miete * 1000 * 12;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var nettoMiete = jahresmiete * (1 - (verwaltungskosten / 100));</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var zinskosten = fremdmittel * 1000000 * (hypothekarzins / 100);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var nettoertrag = nettoMiete - zinskosten;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var nettoRendite = (nettoertrag / (kaufpreis * 1000000)) * 100;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>var nettoRenditeElement = document.getElementById('nettoRendite');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>nettoRenditeElement.innerText = nettoRendite.toFixed(2) + ' %';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (nettoRendite &lt; 1) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>nettoRenditeElement.style.color = 'red';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>} else if (nettoRendite &lt; 2) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>nettoRenditeElement.style.color = 'orange';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>nettoRenditeElement.style.color = 'green';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>window.onload = function() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>calculate();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h1&gt;Rendite Schätzer&lt;/h1&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2&gt;Netto Rendite: &lt;span id="nettoRendite"&gt;0.00 %&lt;/span&gt;&lt;/h2&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;label for="kaufpreis"&gt;Kaufpreis (in Mio.):&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="number" id="kaufpreis" step="0.01" maxlength="4" oninput="calculate()"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;label for="miete"&gt;Schätzwert Miete / Mt. (in Tausend):&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="number" id="miete" step="0.01" maxlength="4" oninput="calculate()"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;label for="eigenmittel"&gt;Eigenmittel (in Mio.):&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="number" id="eigenmittel" step="0.01" value="1" maxlength="4" oninput="calculate()"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;label for="fremdmittel"&gt;Fremdmittel (in Mio.):&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="number" id="fremdmittel" step="0.01" maxlength="4" readonly&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;label for="hypothekarzins"&gt;Hypothekarzins (%):&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="number" id="hypothekarzins" step="0.01" value="2.5" maxlength="4" oninput="calculate()"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;label for="verwaltungskosten"&gt;Verwaltungs &amp; Betriebskosten (%):&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="number" id="verwaltungskosten" step="0.01" value="20" maxlength="4" oninput="calculate()"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+    <div class="container">
+        <h1 class="text-center mb-4">Rendite Schätzer</h1>
+        <h2 class="result text-center">Nettorendite: <span id="nettoRendite"></span></h2>
+        <h2 class="nettoertrag text-center">Nettoertrag: <span id="nettoertrag"></span></h2>
+
+        <div class="mb-3">
+            <label for="kaufpreis" class="form-label">Kaufpreis (in Mio.):</label>
+            <input type="number" class="form-control" id="kaufpreis" step="0.01" oninput="calculate()">
+        </div>
+        <div class="mb-3">
+            <label for="miete" class="form-label">Schätzwert Miete / Mt. (in Tausend):</label>
+            <input type="number" class="form-control" id="miete" step="0.01" oninput="calculate()">
+            <small id="jahresmiete" class="form-text text-muted">Jahresmiete: </small>
+        </div>
+        <div class="mb-3">
+            <label for="eigenmittel" class="form-label">Eigenmittel (in Mio.):</label>
+            <input type="number" class="form-control" id="eigenmittel" step="0.01" value="1" oninput="calculate()">
+        </div>
+        <div class="mb-3">
+            <label for="fremdmittel" class="form-label">Fremdmittel (in Mio.):</label>
+            <input type="number" class="form-control" id="fremdmittel" step="0.01" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="hypothekarzins" class="form-label">Hypothekarzins (in %):</label>
+            <input type="number" class="form-control" id="hypothekarzins" step="0.01" value="2.5" oninput="calculate()">
+            <small id="zinskosten" class="form-text text-muted">Zinskosten: </small>
+        </div>
+        <div class="mb-3">
+            <label for="verwaltungskosten" class="form-label">Verwaltungs & Betriebskosten (in %):</label>
+            <input type="number" class="form-control" id="verwaltungskosten" step="0.01" value="20" oninput="calculate()">
+            <small id="betriebskosten" class="form-text text-muted">Betriebskosten: </small>
+        </div>
+        <div class="footer">Alle Angaben ohne Gewähr.</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
